@@ -31,8 +31,8 @@ The Example proto contains the following fields:
 """
 import collections
 import six
-import tensorflow as tf
-
+import tensorflow.compat.v1 as tf
+#import tensorflow as tf
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_enum('image_format', 'png', ['jpg', 'jpeg', 'png'],

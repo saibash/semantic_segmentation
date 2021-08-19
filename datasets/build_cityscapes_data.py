@@ -70,8 +70,8 @@ import re
 import sys
 import build_data
 from six.moves import range
-import tensorflow as tf
-
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('cityscapes_root',
