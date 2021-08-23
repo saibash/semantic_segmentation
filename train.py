@@ -26,6 +26,7 @@ from tensorflow import keras
 import model
 from datasets import data_generator
 from utils import utils
+import matplotlib.pyplot as plt
 
 flags = tf.compat.v1.flags
 FLAGS = flags.FLAGS
@@ -120,13 +121,12 @@ def main(unused_argv):
           dataset_dir=FLAGS.dataset_dir,
           batch_size=FLAGS.train_batch_size,
           crop_size=[int(sz) for sz in FLAGS.train_crop_size],
-          min_resize_value=FLAGS.min_resize_value,
-          max_resize_value=FLAGS.max_resize_value,
-          resize_factor=FLAGS.resize_factor,
+          #min_resize_value=FLAGS.min_resize_value,
+          #max_resize_value=FLAGS.max_resize_value,
+          #resize_factor=FLAGS.resize_factor,
           min_scale_factor=FLAGS.min_scale_factor,
           max_scale_factor=FLAGS.max_scale_factor,
           scale_factor_step_size=FLAGS.scale_factor_step_size,
-          model_variant=FLAGS.model_variant,
           num_readers=4,
           is_training=True,
           should_shuffle=True,
@@ -138,13 +138,9 @@ def main(unused_argv):
           dataset_dir=FLAGS.dataset_dir,
           batch_size=FLAGS.train_batch_size,
           crop_size=[int(sz) for sz in FLAGS.train_crop_size],
-          min_resize_value=FLAGS.min_resize_value,
-          max_resize_value=FLAGS.max_resize_value,
-          resize_factor=FLAGS.resize_factor,
           min_scale_factor=FLAGS.min_scale_factor,
           max_scale_factor=FLAGS.max_scale_factor,
           scale_factor_step_size=FLAGS.scale_factor_step_size,
-          model_variant=FLAGS.model_variant,
           num_readers=4,
           is_training=False,
           should_shuffle=True,
@@ -185,7 +181,7 @@ def main(unused_argv):
         optimizer = keras.optimizers.Adam(
             learning_rate=FLAGS.adam_learning_rate, epsilon=FLAGS.adam_epsilon)
     elif FLAGS.optimizer == 'RMSprop':
-        optimizer = keras.optimizers.RMSprop(lr=learning_rate)
+        optimizer = keras.optimizers.RMSprop(lr=0.001)
     else:
         raise ValueError('Unknown optimizer')
 
@@ -218,6 +214,15 @@ def main(unused_argv):
     # Calling `save('my_model')` creates a SavedModel folder `my_model`.
     model_fn.save("my_model")
 
+    history = hist.history
+    acc = history['accuracy']
+    val_acc = history['val_accuracy']
+    plt.plot(acc, '-', label='Training Accuracy')
+    plt.plot(val_acc, '--', label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.show()
     # It can be used to reconstruct the model identically.
     # model_fn = keras.models.load_model("my_model")
 

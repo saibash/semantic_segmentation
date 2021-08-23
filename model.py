@@ -66,7 +66,7 @@ def unet_model(input_shape=[256, 256, 3], n_classes=19, down_sampling_trainable=
                    pix2pix.upsample(64, 3)]
 
     # define the input layer
-    inputs = keras.layers.Input(shape=input_shape)
+    inputs = tf.math.divide(keras.layers.Input(shape=input_shape), 255.)
     # down-sample
     down = down_sampling(inputs)
     out = down[-1]

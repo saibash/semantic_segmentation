@@ -95,7 +95,7 @@ def preprocess_image_and_label(image,
   if is_training and label is None:
     raise ValueError('During training, label must be provided.')
   if model_variant is None:
-    tf.logging.warning('Default mean-subtraction is performed. Please specify '
+    tf.compat.v1.logging.warning('Default mean-subtraction is performed. Please specify '
                        'a model_variant. See feature_extractor.network_map for '
                        'supported model variants.')
 
@@ -137,7 +137,6 @@ def preprocess_image_and_label(image,
   target_width = image_width + tf.maximum(crop_width - image_width, 0)
 
 
-
   # Pad image with mean pixel value.
   mean_pixel = tf.reshape(mean_pixel_f(model_variant), [1, 1, 3])
   processed_image = preprocess_utils.pad_to_bounding_box(
@@ -162,5 +161,5 @@ def preprocess_image_and_label(image,
     processed_image, label, _ = preprocess_utils.flip_dim(
         [processed_image, label], _PROB_OF_FLIP, dim=1)
 
-  return original_image, processed_image, label
+  return original_image, tf.math.divide(processed_image, 255.), label
 

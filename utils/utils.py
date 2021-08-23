@@ -160,5 +160,11 @@ def get_label_weight_mask(labels, ignore_label=255):
     return not_ignore_mask
 
 
-
+def resize_image(image, image_size):
+    image = tf.cast(image, tf.float32)
+    # scale values to [0,1]
+    image = image / 255.0
+    # resize image
+    image = tf.image.resize(image, image_size)
+    return image
 
