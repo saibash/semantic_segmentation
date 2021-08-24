@@ -28,7 +28,7 @@ from datasets import data_generator
 from utils import utils
 import numpy as np
 import matplotlib.pyplot as plt
-
+from utils import utils
 import cv2
 
 
@@ -70,6 +70,15 @@ def show_inference(model, original_image, image_size):
 
     predictions_reduced = np.expand_dims(np.array(predictions_reduced, dtype=np.uint8), axis=-1)
 
+    # adds colormap
+    predictions = utils.label_to_color_image(np.squeeze(predictions))
+    predictions_reduced = utils.label_to_color_image(np.squeeze(predictions_reduced))
+
+    # adds label bar
+    label_bar = utils.get_label_bar()
+    predictions_reduced = utils.hconcat_resize_min([predictions_reduced, label_bar])
+    predictions = utils.hconcat_resize_min([predictions, label_bar])
+
     return predictions_reduced, predictions
 
 
@@ -87,11 +96,11 @@ def main(unused_argv):
 
         predictions_reduced, predictions = show_inference(model_fn, img, [int(sz) for sz in FLAGS.crop_size])
 
-        final_pred = cv2.applyColorMap(predictions, cv2.COLORMAP_HSV)  # JET)
-        cv2.imshow('Final_prediction', final_pred)
+        # final_pred = cv2.applyColorMap(predictions, cv2.COLORMAP_HSV)  # JET)
+        cv2.imshow('Final_prediction', predictions)
 
-        final_pred_reduced = cv2.applyColorMap(predictions_reduced, cv2.COLORMAP_HSV)  # JET)
-        cv2.imshow('Final_prediction_reduced', final_pred_reduced)
+        # final_pred_reduced = cv2.applyColorMap(predictions_reduced, cv2.COLORMAP_HSV)  # JET)
+        cv2.imshow('Final_prediction_reduced', predictions_reduced)
 
         cv2.imshow('Original img', img)
 
@@ -103,6 +112,5 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
-    flags.mark_flag_as_required('train_logdir')
-    flags.mark_flag_as_required('dataset_dir')
+
     tf.compat.v1.app.run()
